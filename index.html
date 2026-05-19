@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ラブレター生成アプリ</title>
+  <style>
+    :root {
+      --bg: #fff1f6;
+      --card: #ffffff;
+      --text: #2b2b2b;
+      --muted: #777;
+      --accent: #ff5c8a;
+      --accent-dark: #e94873;
+      --border: #ffd1df;
+      --shadow: 0 12px 30px rgba(0,0,0,.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, var(--bg), #fff);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .hero {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 18px 0 6px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 40px);
+      color: #d93b69;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 20px;
+      color: #c93f67;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 14px 0 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #e9c9d3;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: #fff;
+      outline: none;
+      transition: .2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255,92,138,.12);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+      line-height: 1.8;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font: inherit;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+    }
+
+    .primary:hover { background: var(--accent-dark); }
+    .ghost {
+      background: #fff;
+      color: #c93f67;
+      border: 1px solid #f0bfd0;
+    }
+
+    .ghost:hover { background: #fff6f9; }
+
+    .result {
+      min-height: 100%;
+    }
+
+    .letter {
+      white-space: pre-wrap;
+      line-height: 2;
+      font-size: 16px;
+      background: linear-gradient(180deg, #fff, #fff9fb);
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px dashed #efc7d4;
+      min-height: 320px;
+    }
+
+    .hint {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .footer {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #a58a95;
+      font-size: 12px;
+      padding: 8px 0 0;
+    }
+
+    @media (max-width: 780px) {
+      .wrap { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>💌 ラブレター生成アプリ</h1>
+      <p>名前・雰囲気・伝えたいことを入れるだけで、やわらかい恋文を自動生成します。</p>
+    </div>
+
+    <div class="card">
+      <h2>入力フォーム</h2>
+
+      <label for="fromName">あなたの名前</label>
+      <input id="fromName" type="text" placeholder="例: かずき" />
+
+      <label for="toName">相手の名前</label>
+      <input id="toName" type="text" placeholder="例: みなみ" />
+
+      <div class="row">
+        <div>
+          <label for="tone">文体</label>
+          <select id="tone">
+            <option value="sweet">やさしい</option>
+            <option value="pure">純粋</option>
+            <option value="passionate">情熱的</option>
+            <option value="cute">かわいい</option>
+          </select>
+        </div>
+        <div>
+          <label for="length">長さ</label>
+          <select id="length">
+            <option value="short">短め</option>
+            <option value="medium" selected>ふつう</option>
+            <option value="long">長め</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="memory">思い出や伝えたいこと</label>
+      <textarea id="memory" placeholder="例: いつも笑顔に救われています。放課後に話した時間がうれしかったです。"></textarea>
+
+      <div class="actions">
+        <button class="primary" onclick="generateLetter()">ラブレターを作る</button>
+        <button class="ghost" onclick="copyLetter()">コピー</button>
+        <button class="ghost" onclick="clearAll()">クリア</button>
+      </div>
+
+      <div class="hint">
+        ※ そのまま送る前に、言葉の強さを少し調整すると自然になります。恋は勢いだけでなく編集も大事です。
+      </div>
+    </div>
+
+    <div class="card result">
+      <h2>生成されたラブレター</h2>
+      <div id="letter" class="letter">ここにラブレターが表示されます。</div>
+    </div>
+
+    <div class="footer">
+      Made with HTML / CSS / JS
+    </div>
+  </div>
+
+  <script>
+    function getToneParts(tone) {
+      const map = {
+        sweet: {
+          opening: "いつも、",
+          middle: "あなたと話している時間が、私にとってとても大切です。",
+          closing: "これからも、少しずつでもあなたのことを知っていけたらうれしいです。"
+        },
+        pure: {
+          opening: "素直に伝えたいです。",
+          middle: "あなたの存在は、毎日の気持ちをやさしくしてくれます。",
+          closing: "この気持ちが、まっすぐ届きますように。"
+        },
+        passionate: {
+          opening: "あなたへ。",
+          middle: "会うたびに心が動いて、気づけばずっとあなたのことを考えています。",
+          closing: "この想いを、ちゃんと大切に伝えたくて手紙を書きました。"
+        },
+        cute: {
+          opening: "だいすきなあなたへ。",
+          middle: "あなたの笑顔を見ると、なんだかそれだけで元気になれます。",
+          closing: "これからも、たくさんお話できたらうれしいです。"
+        }
+      };
+      return map[tone] || map.sweet;
+    }
+
+    function getLengthTail(length, fromName, toName) {
+      if (length === "short") {
+        return `\n\n${fromName}より`;
+      }
+      if (length === "long") {
+        return `\n\nこれまで何気なく過ごしてきた時間の中で、${toName}さんの言葉や笑顔に何度も助けられてきました。そんなふうに心をあたためてくれる人に出会えたことが、本当にうれしいです。まだうまく言えないこともあるけれど、この気持ちは大切にしていきたいと思っています。\n\n${fromName}より`;
+      }
+      return `\n\n${fromName}より`;
+    }
+
+    function generateLetter() {
+      const fromName = document.getElementById("fromName").value.trim() || "あなた";
+      const toName = document.getElementById("toName").value.trim() || "大切な人";
+      const tone = document.getElementById("tone").value;
+      const length = document.getElementById("length").value;
+      const memory = document.getElementById("memory").value.trim();
+
+      const parts = getToneParts(tone);
+
+      let letter = `${toName}さんへ\n\n${parts.opening}\n${parts.middle}\n`;
+
+      if (memory) {
+        letter += `\n特に、${memory} ということが心に残っています。\n`;
+      } else {
+        letter += `\nあなたと過ごす時間は、どれも静かに心に残っています。\n`;
+      }
+
+      if (length === "long") {
+        letter += `\n${parts.closing}\n`;
+        letter += getLengthTail(length, fromName, toName);
+      } else if (length === "medium") {
+        letter += `\n${parts.closing}`;
+        letter += getLengthTail(length, fromName, toName);
+      } else {
+        letter += `\n${parts.closing}`;
+        letter += getLengthTail(length, fromName, toName);
+      }
+
+      document.getElementById("letter").textContent = letter;
+    }
+
+    async function copyLetter() {
+      const text = document.getElementById("letter").textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("ラブレターをコピーしました。便利ですね、感情までワンクリックです。");
+      } catch (e) {
+        alert("コピーに失敗しました。ブラウザの制限かもしれません。");
+      }
+    }
+
+    function clearAll() {
+      document.getElementById("fromName").value = "";
+      document.getElementById("toName").value = "";
+      document.getElementById("memory").value = "";
+      document.getElementById("tone").value = "sweet";
+      document.getElementById("length").value = "medium";
+      document.getElementById("letter").textContent = "ここにラブレターが表示されます。";
+    }
+  </script>
+</body>
+</html>

@@ -1,3 +1,0 @@
-# passcode.txt
-Device: youbu’s iPad
-Passcode: 1234
